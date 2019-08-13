@@ -3,10 +3,11 @@ const router = express.Router()
 const BookModel = require("../models/book")
 
 router.post("/", (req, res) => {
-    let { title, description } = req.body
+    let { title, description, price } = req.body
     var insert_data = {
         title,
-        description
+        description,
+        price
     }
 
     let data = new BookModel(insert_data)
