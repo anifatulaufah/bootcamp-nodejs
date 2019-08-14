@@ -37,6 +37,38 @@ const getAll = async () => {
     }
 }
 
+const update = async (id, updated_data) => {
+    let {name, email, phone, fresh } = updated_data
+    let opts = {
+        new: fresh === "true" ? true : false
+    }
+    let data = {
+        name,
+        email,
+        phone
+    }
+
+    try {
+        let query = await User.findOneAndUpdate({
+            _id: id
+        }, data, opts).exec()
+
+        return query
+    } catch(err) {
+        throw err
+    }
+}
+const destroy = async (id) => {
+    try {
+        let query = await User.findOneAndDelete({
+            _id: id
+        }).exec()
+
+        return query
+    } catch(err) {
+        throw err
+    }
+}
 const getDetail = async (id) => {
     try {
         let query = await User.findOne({
@@ -52,5 +84,7 @@ const getDetail = async (id) => {
 module.exports = {
     create,
     getAll,
+    update,
+    destroy,
     getDetail
 }
