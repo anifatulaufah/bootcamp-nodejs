@@ -1,19 +1,16 @@
 const Book = require("../models/book")
 const { isInteger } = require("lodash")
+const User = require("../models/user")
 
 const create = async (req) => {
-    let { title, description, price } = req.body
+    let { title, description, price, author } = req.body
     price = parseInt(price)
-    // console.log(`Value of price ${price}`)
-
-    // if(isInteger(price) === false) {
-    //     return "Wrong type of `price`"
-    // }
 
     var insert_data = {
         title,
         description,
-        price
+        price,
+        author
     }
 
     let data = new Book(insert_data)
@@ -31,17 +28,16 @@ const create = async (req) => {
 }
 
 const getAll = async () => {
-    // let query = await Book.find({}).exec()
-    // console.log(`Result ${query}`)
+    let query = await Book.find({})
+        .populate([
+            {
+                path: 'author',
+                model: User
+            }
+        ]).exec()
+    console.log(`Result ${query}`)
 
-    // return query
-    try {
-        let query = await Book.find({}).exec()
-        console.log(`Result ${query}`)
-        return query
-    } catch(err) {
-        throw err
-    }
+    return query
 }
 
 const getDetail = async (id) => {
@@ -55,8 +51,45 @@ const getDetail = async (id) => {
         throw err
     }
 }
+const update = async (id, updated_data) => {
+    let { title, description, price, author, fresh } = updated_data
+    let opts = {
+        new: fresh === "true" ? true : false
+    }
+    let data = {
+        title,
+        description,
+        price,
+        author
+    }
+
+    try {
+        let query = await Book.findOneAndUpdate({
+            _id: id
+        }, data, opts).exec()
+
+        return query
+    } catch(err) {
+        throw err
+    }
+}
+
+const destroy = async (id) => {
+    try {
+        let query = await Book.findOneAndDelete({
+            _id: id
+        }).exec()
+
+        return query
+    } catch(err) {
+        throw err
+    }
+}
+
 module.exports = {
     create,
     getAll,
-    getDetail
+    getDetail,
+    update,
+    destroy
 }
