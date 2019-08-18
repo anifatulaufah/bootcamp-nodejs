@@ -1,4 +1,4 @@
-const User = require("../models/user")
+const User = require("../models/user.model")
 
 const create = async (req) => {
     let { name, email, phone } = req.body
@@ -37,8 +37,20 @@ const getAll = async () => {
     }
 }
 
+const getDetail = async (id) => {
+    try {
+        let query = await User.findOne({
+            _id: id
+        }).exec()
+
+        return query
+    } catch(err) {
+        throw err
+    }
+}
+
 const update = async (id, updated_data) => {
-    let {name, email, phone, fresh } = updated_data
+    let { name, email, phone, fresh } = updated_data
     let opts = {
         new: fresh === "true" ? true : false
     }
@@ -58,20 +70,10 @@ const update = async (id, updated_data) => {
         throw err
     }
 }
+
 const destroy = async (id) => {
     try {
         let query = await User.findOneAndDelete({
-            _id: id
-        }).exec()
-
-        return query
-    } catch(err) {
-        throw err
-    }
-}
-const getDetail = async (id) => {
-    try {
-        let query = await User.findOne({
             _id: id
         }).exec()
 
@@ -84,7 +86,7 @@ const getDetail = async (id) => {
 module.exports = {
     create,
     getAll,
+    getDetail,
     update,
-    destroy,
-    getDetail
+    destroy
 }

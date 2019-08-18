@@ -21,7 +21,6 @@ class ShopUpdate {
         } catch(err) {
             throw err
         }
-            
 
         }
 
