@@ -10,14 +10,16 @@ class ForgotPassword {
 
     async exec() {
         try {
-            let user = await User.findOne({ email }).exec()
+            let user = await User.findOne({ 
+                email: this.email
+            }).exec()
             if(user === null) {
                 throw new Error("User not found")
             }
 
             let token = randomKey(54, 'aA#')
             let password = new ResetPassword({
-                email = this.email,
+                email: this.email, 
                 token
             })
             await password.save()
@@ -37,3 +39,5 @@ class ForgotPassword {
         }
     }
 }
+
+module.exports = ForgotPassword
